@@ -6,14 +6,14 @@
         Login | Online Classroom Management
 
     </title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../../../public/css/style.css">
 </head>
 
 <body>
     <div class="container">
         <div class="login-form">
             <h2>Login</h2>
-            <form id="loginForm"></form>
+            <form id="loginForm">
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
@@ -34,6 +34,7 @@
             <p>Don't have an account? <a href="register.php">Register here</a></p>
         </div>
     </div>
+    
 </body>
 
 </html>
