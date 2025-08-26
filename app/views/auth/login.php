@@ -13,10 +13,16 @@
     <div class="container">
         <div class="login-form">
             <h2>Login</h2>
-            <form id="loginForm">
+            <?php if (isset($_GET['error'])): ?>
+                <div class="error-message"><?php echo htmlspecialchars($_GET['error']); ?></div>
+            <?php endif; ?>
+            <?php if (isset($_GET['success'])): ?>
+                <div class="success-message"><?php echo htmlspecialchars($_GET['success']); ?></div>
+            <?php endif; ?>
+            <form id="loginForm" action="../../controllers/authController.php?action=login" method="post">
             <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
@@ -34,7 +40,8 @@
             <p>Don't have an account? <a href="register.php">Register here</a></p>
         </div>
     </div>
-    
+    <script src="../../../public/js/validation.js"></script>
+
 </body>
 
 </html>

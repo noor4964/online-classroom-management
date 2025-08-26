@@ -8,7 +8,10 @@
     <div class="container">
         <div class="register-form">
             <h2>Register</h2>
-            <form id="registerForm">
+            <?php if (isset($_GET['error'])): ?>
+                <div class="error-message"><?php echo htmlspecialchars($_GET['error']); ?></div>
+            <?php endif; ?>
+            <form id="registerForm" action="../../controllers/authController.php?action=register" method="post">
                 <div class="form-group">
                     <label for="firstName"> First Name:</label>
                     <input type="text" id="firstName" name="firstName" required>
@@ -41,5 +44,6 @@
             <p>Already have an account? <a href="login.php">Login here</a></p>
         </div>
     </div>
+    <script src="../../../public/js/validation.js"></script>
 </body>
 </html>
