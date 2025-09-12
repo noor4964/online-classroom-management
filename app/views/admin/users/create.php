@@ -12,25 +12,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 <head>
     <title>Create User</title>
     <link rel="stylesheet" href="../../../../public/css/style.css">
-    <style>
-       
-        body { margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4; }
-        .admin-form-container { max-width: 600px; margin: 20px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .admin-form-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #e9ecef; }
-        .admin-form-header h1 { margin: 0; color: #333; font-size: 1.8rem; }
-        .admin-form-group { margin-bottom: 15px; }
-        .admin-form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #495057; }
-        .admin-form-group input, .admin-form-group select { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 5px; font-size: 1rem; box-sizing: border-box; }
-        .admin-form-row { display: flex; gap: 15px; }
-        .admin-form-row .admin-form-group { flex: 1; }
-        .admin-form-actions { margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef; }
-        .btn { display: inline-block; padding: 10px 20px; border: none; border-radius: 5px; text-decoration: none; font-size: 1rem; cursor: pointer; margin-right: 10px; transition: all 0.3s ease; }
-        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-        .btn-secondary { background: #6c757d; color: white; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-        input:focus, select:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2); }
-        @media (max-width: 768px) { .admin-form-container { margin: 10px; padding: 15px; } .admin-form-row { flex-direction: column; gap: 0; } .admin-form-header { flex-direction: column; gap: 10px; text-align: center; } }
-    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -69,12 +50,31 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 
             <div class="admin-form-group">
                 <label>Role *</label>
-                <select name="role" required>
+                <select name="role" required id="roleSelect">
                     <option value="">Select Role</option>
                     <option value="teacher" <?php echo (isset($_POST['role']) && $_POST['role'] == 'teacher') ? 'selected' : ''; ?>>Teacher</option>
                     <option value="student" <?php echo (isset($_POST['role']) && $_POST['role'] == 'student') ? 'selected' : ''; ?>>Student</option>
                     <option value="admin" <?php echo (isset($_POST['role']) && $_POST['role'] == 'admin') ? 'selected' : ''; ?>>Admin</option>
                 </select>
+            </div>
+
+            <div class="admin-form-group" id="studentIdGroup" style="display:none;">
+                <label>Student ID * <small style="font-weight:normal;color:#666;">Format: YY-XXXXX-X</small></label>
+                <div class="admin-form-row">
+                    <div class="admin-form-group" style="flex: 1;">
+                        <input type="text" name="studentId" id="studentIdInput" placeholder="Leave blank for auto-generation" pattern="^[0-9]{2}-[0-9]{4,5}-[0-9]$" value="<?php echo isset($_POST['studentId']) ? htmlspecialchars($_POST['studentId']) : ''; ?>">
+                        <small style="color:#6c757d;">Will be used to generate email (e.g. 25-0001-1@aiub.edu)</small>
+                    </div>
+                    <div>
+                        <label style="margin-bottom: 5px; display: block; font-size: 0.9em;">Semester</label>
+                        <select name="semester" id="semesterSelect" style="width: 100px;">
+                            <option value="1" <?php echo (isset($_POST['semester']) && $_POST['semester'] == '1') ? 'selected' : ''; ?>>Spring</option>
+                            <option value="2" <?php echo (isset($_POST['semester']) && $_POST['semester'] == '2') ? 'selected' : ''; ?>>Summer</option>
+                            <option value="3" <?php echo (isset($_POST['semester']) && $_POST['semester'] == '3') ? 'selected' : ''; ?>>Fall</option>
+                        </select>
+                    </div>
+                    <button type="button" onclick="generateStudentId()" class="btn btn-secondary" style="white-space: nowrap;">Auto Generate</button>
+                </div>
             </div>
 
             <div style="background: #e9ecef; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #667eea;">
@@ -92,6 +92,47 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
                 <a href="index.php" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
-    </div>
+        </div>
+<script>
+const roleSelect = document.getElementById('roleSelect');
+const studentGroup = document.getElementById('studentIdGroup');
+
+function toggleStudent(){
+    if(roleSelect.value === 'student'){ 
+        studentGroup.style.display='block'; 
+        // Don't require field since we can auto-generate
+    } else { 
+        studentGroup.style.display='none'; 
+        studentGroup.querySelector('input').removeAttribute('required'); 
+    }
+}
+
+async function generateStudentId() {
+    const semester = document.getElementById('semesterSelect').value;
+    const input = document.getElementById('studentIdInput');
+    
+    try {
+        const response = await fetch('../../../controllers/admin/generateStudentId.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'semester=' + semester
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            input.value = data.studentId;
+            input.style.borderColor = '#28a745';
+        } else {
+            alert('Error generating ID: ' + (data.error || 'Unknown error'));
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error generating student ID');
+    }
+}
+
+roleSelect.addEventListener('change', toggleStudent);
+toggleStudent();
+</script>
 </body>
 </html>

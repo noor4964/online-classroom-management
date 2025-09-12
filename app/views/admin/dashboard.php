@@ -126,31 +126,12 @@ $classStats = getClassStats();
 <head>
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="../../../public/css/style.css">
-    <style>
-       
-        body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        .admin-container { display: flex; min-height: 100vh; margin: 0; padding: 0; }
-        .sidebar { width: 250px; background: #2c3e50; color: white; padding: 20px; }
-        .sidebar h2 { margin: 0 0 20px 0; text-align: center; }
-        .sidebar ul { list-style: none; padding: 0; margin: 0; }
-        .sidebar li { margin-bottom: 10px; }
-        .sidebar a { color: white; text-decoration: none; display: block; padding: 10px 0; }
-        .sidebar a:hover { background-color: #34495e; padding-left: 10px; }
-        .content { flex: 1; padding: 30px; background: #f4f4f4; }
-        .stats { display: flex; gap: 20px; margin: 20px 0; }
-        .stat { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; text-align: center; flex: 1; }
-        .stat h3 { font-size: 2rem; margin: 0 0 10px 0; }
-        .stat p { margin: 0; }
-        .actions { margin-top: 20px; }
-        .btn { display: inline-block; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px; }
-        .btn:hover { background: #218838; }
-    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <div class="admin-container">
-        <nav class="sidebar">
+    <div class="dashboard-container admin-container">
+        <nav class="dashboard-sidebar sidebar">
             <h2>Admin Panel</h2>
             <ul>
                 <li><a href="dashboard.php">
@@ -167,43 +148,43 @@ $classStats = getClassStats();
             </ul>
         </nav>
         
-        <main class="content">
+        <main class="dashboard-content content">
             <h1>Admin Dashboard</h1>
             <p>Welcome, <?php echo htmlspecialchars($_SESSION['first_name'] . ' ' . $_SESSION['last_name']); ?>!</p>
             
-            <div class="stats">
-                <div class="stat">
+            <div class="dashboard-stats stats">
+                <div class="dashboard-stat stat">
                     <h3><?php echo $userStats['total_users']; ?></h3>
                     <p>Total Users</p>
                 </div>
-                <div class="stat">
+                <div class="dashboard-stat stat">
                     <h3><?php echo $userStats['total_teachers']; ?></h3>
                     <p>Teachers</p>
                 </div>
-                <div class="stat">
+                <div class="dashboard-stat stat">
                     <h3><?php echo $userStats['total_students']; ?></h3>
                     <p>Students</p>
                 </div>
-                <div class="stat">
+                <div class="dashboard-stat stat">
                     <h3><?php echo $courseStats['total_courses']; ?></h3>
                     <p>Total Courses</p>
                 </div>
             </div>
 
-            <div class="stats">
-                <div class="stat">
+            <div class="dashboard-stats stats">
+                <div class="dashboard-stat stat">
                     <h3><?php echo $userStats['active_users']; ?></h3>
                     <p>Active Users</p>
                 </div>
-                <div class="stat">
+                <div class="dashboard-stat stat">
                     <h3><?php echo $courseStats['active_courses']; ?></h3>
                     <p>Active Courses</p>
                 </div>
-                <div class="stat">
+                <div class="dashboard-stat stat">
                     <h3><?php echo $classStats['total_classes']; ?></h3>
                     <p>Total Classes</p>
                 </div>
-                <div class="stat">
+                <div class="dashboard-stat stat">
                     <h3><?php echo $classStats['active_classes']; ?></h3>
                     <p>Active Classes</p>
                 </div>
